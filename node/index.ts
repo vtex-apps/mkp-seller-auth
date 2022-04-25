@@ -2,10 +2,13 @@ import type { ClientsConfig, ServiceContext, RecorderState } from '@vtex/api'
 import { LRUCache, method, Service } from '@vtex/api'
 
 import { Clients } from './clients'
-import { status } from './middlewares/status'
-import { validate } from './middlewares/validate'
+import { validateRequest } from './middlewares/validateRequest'
+import { checkConfiguration } from './middlewares/checkConfiguration'
+import { validateVtexIdclientAutCookie } from './middlewares/validateVtexIdclientAutCookie'
+import { executeCall } from './middlewares/executeCall'
+import { healthcheck } from './middlewares/healthcheck'
 
-const TIMEOUT_MS = 800
+const TIMEOUT_MS = 6000
 
 // Create a LRU memory cache for the Status client.
 // The @vtex/api HttpClient respects Cache-Control headers and uses the provided cache.
@@ -37,6 +40,10 @@ declare global {
   // The shape of our State object found in `ctx.state`. This is used as state bag to communicate between middlewares.
   interface State extends RecorderState {
     code: number
+    params: any
+    requestBody: any
+    requestHeaders: any
+    requesterTokenDetails: any
   }
 }
 
@@ -44,9 +51,16 @@ declare global {
 export default new Service({
   clients,
   routes: {
-    // `status` is the route ID from service.json. It maps to an array of middlewares (or a single handler).
-    status: method({
-      GET: [validate, status],
+    healthcheck: method({
+      GET: [healthcheck],
+    }),
+    executeCall: method({
+      POST: [
+        validateRequest,
+        checkConfiguration,
+        validateVtexIdclientAutCookie,
+        executeCall,
+      ],
     }),
   },
 })
