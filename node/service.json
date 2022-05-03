@@ -7,11 +7,11 @@
   "workers": 1,
   "routes": {
     "healthcheck": {
-      "path": "/v0/mkp-seller-auth/healthcheck",
+      "path": "/mkp-seller-auth/v0/healthcheck",
       "public": true
     },
     "executeCall": {
-      "path": "/v0/mkp-seller-auth/executeCall",
+      "path": "/mkp-seller-auth/v0/executeCall",
       "public": true
     }
   }

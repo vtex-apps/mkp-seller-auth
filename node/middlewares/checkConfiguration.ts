@@ -18,8 +18,9 @@ function parseJwt(token: string) {
 
 // TODO optimize this to avoid always iterating the whole array
 function listContainsAccountId(list: [], accountId: string) {
+  // console.info('checkConfiguration accountId: ', accountId)
   const mapped = list.map((elem: any) => {
-    console.info('checkConfiguration elem: ', elem)
+    // console.info('checkConfiguration SellerId: ', elem.SellerId)
 
     return accountId === elem.SellerId
   })
@@ -40,6 +41,11 @@ export async function checkConfiguration(
   const requesterTokenDetails = parseJwt(
     requestHeaders.requestervtexidclientautcookie
   )
+
+  // console.warn(
+  //   'checkConfiguration requesterTokenDetails: ',
+  //   requesterTokenDetails
+  // )
 
   ctx.state.requesterTokenDetails = requesterTokenDetails
 
@@ -75,7 +81,7 @@ export async function checkConfiguration(
     )
   }
 
-  console.info('checkConfiguration passed')
+  // console.info('checkConfiguration passed')
 
   await next()
 }

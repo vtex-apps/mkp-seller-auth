@@ -43,7 +43,7 @@ export async function validateRequest(ctx: Context, next: () => Promise<any>) {
   ctx.state.requestBody = body
   ctx.state.requestHeaders = ctx.headers
 
-  console.info('validateRequest passed')
+  // console.info('validateRequest passed')
 
   await next()
 }
