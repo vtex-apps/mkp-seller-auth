@@ -1,7 +1,7 @@
 {
   "name": "mkp-seller-auth",
   "vendor": "vtex",
-  "version": "0.2.0-beta4",
+  "version": "0.2.0",
   "title": "Marketplace Seller Comunication",
   "description": "Send call to the related account without a token for that account to execute tasks in his name",
   "mustUpdateAt": "2018-01-04",
