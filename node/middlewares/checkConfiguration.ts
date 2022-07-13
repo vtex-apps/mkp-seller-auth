@@ -20,7 +20,7 @@ function parseJwt(token: string) {
 function listContainsAccountId(list: [], accountId: string) {
   // console.info('checkConfiguration accountId: ', accountId)
   const mapped = list.map((elem: any) => {
-    // console.info('checkConfiguration SellerId: ', elem.SellerId)
+    console.info('checkConfiguration SellerId: ', elem.SellerId)
 
     return accountId === elem.SellerId
   })
@@ -62,9 +62,12 @@ export async function checkConfiguration(
   } else if (requestBody.accountType === 'marketplace') {
     // check account affiliations
     const affiliationsListResponse = await affiliations.getAffiliationsList()
-
+    const affiliatedMarketplaces = affiliationsListResponse.data.map( (affiliation: any) => {
+      const splittedUri = affiliation.searchURIEndpoint.split('/')
+      return { SellerId: splittedUri[splittedUri.length-2] }
+    })
     validConfig = listContainsAccountId(
-      affiliationsListResponse.data,
+      affiliatedMarketplaces,
       requesterTokenDetails.account
     )
   }
@@ -80,8 +83,6 @@ export async function checkConfiguration(
       'Configuration for account not found. If seller check affiliations (https://{account}.myvtex.com/admin/checkout/#/affiliates). If marketplace check sellers list (https://{account}.myvtex.com/admin/Site/Seller.aspx)'
     )
   }
-
-  // console.info('checkConfiguration passed')
 
   await next()
 }
